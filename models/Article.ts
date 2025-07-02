@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface IArticle extends Document {
+  _id : Types.ObjectId;
   title: string;
   slug: string;
   content: string;

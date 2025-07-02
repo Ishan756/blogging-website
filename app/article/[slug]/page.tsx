@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import dbConnect from '@/lib/db';
-import Article from '@/models/Article';
+import Article, { IArticle } from '@/models/Article';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Badge } from '@/components/ui/badge';
@@ -24,18 +24,24 @@ async function getArticle(slug: string) {
   const article = await Article.findOne({ 
     slug, 
     isPublished: true 
-  }).lean();
+  }).lean<IArticle>();
 
   if (!article) {
     return null;
   }
 
   return {
-    ...article,
-    _id: article._id.toString(),
-    publishedAt: article.publishedAt.toISOString(),
-    createdAt: article.createdAt.toISOString(),
-    updatedAt: article.updatedAt.toISOString(),
+   ...article,
+    _id: article._id.toString(), // ✅ Now `_id` is correctly typed
+    publishedAt: article.publishedAt instanceof Date
+      ? article.publishedAt.toISOString()
+      : new Date(article.publishedAt).toISOString(),
+    createdAt: article.createdAt instanceof Date
+      ? article.createdAt.toISOString()
+      : new Date(article.createdAt).toISOString(),
+    updatedAt: article.updatedAt instanceof Date
+      ? article.updatedAt.toISOString()
+      : new Date(article.updatedAt).toISOString(),
   };
 }
 
