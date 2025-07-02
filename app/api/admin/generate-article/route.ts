@@ -7,7 +7,7 @@ import {
   enrichTopicWithMedia, 
   generateSlug 
 } from '@/lib/trending-scraper';
-import { generateArticleFromTrend, generateEnhancedArticle } from '@/lib/enhanced-openai';
+import { generateArticleFromTrend } from '@/lib/enhanced-openai';
 import { authOptions } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const { topic, source } = await request.json();
     let selectedTopic = topic;
     // Only allow the types that your Article schema expects
-    let trendingSource: 'google' | 'twitter' | 'manual' = 'manual';
+    let trendingSource: 'google' | 'twitter' | 'manual' | 'youtube' = 'manual';
     
     // If no topic provided, get trending topics
     if (!selectedTopic) {
@@ -40,7 +40,11 @@ export async function POST(request: NextRequest) {
         selectedTopic = selectedTrend.title;
 
         // Map source to allowed types
-        if (selectedTrend.source === 'google' || selectedTrend.source === 'twitter') {
+        if (
+          selectedTrend.source === 'google' ||
+          selectedTrend.source === 'twitter' ||
+          selectedTrend.source === 'youtube'
+        ) {
           trendingSource = selectedTrend.source;
         } else {
           trendingSource = 'manual';
@@ -109,7 +113,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       success: true, 
       article: {
-        id: article._id,
+        id: article._id.toString(),
         title: article.title,
         slug: article.slug,
         trendingSource: article.trendingSource,

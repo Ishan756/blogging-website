@@ -13,7 +13,7 @@ export interface IArticle extends Document {
   ogImage: string;
   tags: string[];
   trendingTopic: string;
-  trendingSource: 'google' | 'twitter' | 'manual';
+  trendingSource: 'google' | 'twitter' | 'manual' | 'youtube';
   media: {
     images: Array<{
       url: string;
@@ -67,7 +67,7 @@ const ArticleSchema = new Schema<IArticle>({
   ogImage: { type: String, required: true },
   tags: [{ type: String }],
   trendingTopic: { type: String, required: true },
-  trendingSource: { type: String, enum: ['google', 'twitter', 'manual'], default: 'google' },
+  trendingSource: { type: String, enum: ['google', 'twitter', 'manual' , 'youtube'], default: 'google' },
   media: {
     images: [{
       url: { type: String, required: true },
