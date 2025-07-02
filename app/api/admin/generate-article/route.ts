@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
     
     const { topic, source } = await request.json();
     let selectedTopic = topic;
+    // Only allow the types that your Article schema expects
     let trendingSource: 'google' | 'twitter' | 'manual' = 'manual';
     
     // If no topic provided, get trending topics
@@ -37,7 +38,13 @@ export async function POST(request: NextRequest) {
         const randomIndex = Math.floor(Math.random() * Math.min(trends.length, 10));
         const selectedTrend = trends[randomIndex];
         selectedTopic = selectedTrend.title;
-        trendingSource = selectedTrend.source;
+
+        // Map source to allowed types
+        if (selectedTrend.source === 'google' || selectedTrend.source === 'twitter') {
+          trendingSource = selectedTrend.source;
+        } else {
+          trendingSource = 'manual';
+        }
         
         console.log(`Selected trending topic: ${selectedTopic} from ${trendingSource}`);
       } else {

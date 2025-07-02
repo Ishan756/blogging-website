@@ -6,7 +6,7 @@ import axios from 'axios';
 const cheerio = require('cheerio');
 export interface TrendingTopic {
   title: string;
-  source: 'google' | 'twitter' | 'youtube';
+  source: 'google' | 'twitter' | 'youtube' | 'manual';
   searchVolume?: string;
   relatedQueries: string[];
   category?: string;
